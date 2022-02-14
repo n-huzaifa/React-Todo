@@ -1,7 +1,15 @@
+import { useState } from "react";
+import LoginPage from "./routes/LoginPage";
+import Context from "./helper/Context";
 function App() {
+
+  const [login, setLogin] = useState(false)
+
   return (
-    <div className="App text-center">
-      <h1 className="text-red-400 font-thin p-20">Hello World</h1>
+    <div>
+      <Context.Provider value={{ login, setLogin }}>
+        <LoginPage />
+      </Context.Provider>
     </div>
   );
 }
