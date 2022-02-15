@@ -1,12 +1,49 @@
-import React from 'react'
-import LoginPage from './LoginPage'
+import React, { useEffect, useState } from 'react'
+import TodoForm from '../components/TodoForm'
+import TodoList from '../components/TodoList'
+
+const LOCAL_STR_KEY = "todos"
 
 function Main() {
+    const [todos, setTodos] = useState([])
+
+    useEffect(() => {
+        const storageTodos = JSON.parse(localStorage.getItem(LOCAL_STR_KEY))
+        if (storageTodos) {
+            setTodos(storageTodos)
+        }
+    }, [])
+
+    useEffect(() => {
+        localStorage.setItem(LOCAL_STR_KEY, JSON.stringify(todos))
+    }, [todos])
+
+    function addTodo(todo) {
+        setTodos([todo, ...todos])
+    }
+
+    function toggleComplete(id) {
+        setTodos(
+            todos.map(todo => {
+                if (todo.id === id) {
+                    return {
+                        ...todo,
+                        completed: !todo.completed
+                    }
+                }
+                return todo
+            })
+        )
+    }
+
+    function removeTodo(id) {
+        setTodos(todos.filter(todo => todo.id !== id))
+    }
+
     return (
-        <div>
-            <h1 className="text-red-400 font-thin p-20 bg-black">
-                Logged IN!!
-            </h1>
+        <div className='font-bold text-2xl'>
+            <TodoForm addTodo={addTodo} />
+            <TodoList todos={todos} toggleComplete={toggleComplete} removeTodo={removeTodo} />
         </div>
     )
 }
